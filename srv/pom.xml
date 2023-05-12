@@ -12,9 +12,35 @@
   <packaging>jar</packaging>
 
   <name>srv</name>
+  
+  <properties>
+  	<jdk.version>11</jdk.version>
+	<opentelemetry-javaagent.version>1.25.1</opentelemetry-javaagent.version>
+	<otel-agent-ext-java.version>1.5.0</otel-agent-ext-java.version>
+	<fesr-to-otel-java.version>1.5.0</fesr-to-otel-java.version>
+  </properties>
 
   <!-- ACTUAL DEPENDENCIES -->
   <dependencies>
+	<dependency>
+		<groupId>io.opentelemetry.javaagent</groupId>
+		<artifactId>opentelemetry-javaagent</artifactId>
+		<version>${opentelemetry-javaagent.version}</version>
+		<scope>runtime</scope>
+	</dependency>	
+	<dependency>
+		<groupId>com.sap.xdsr</groupId>
+		<artifactId>otel-agent-ext-java</artifactId>
+		<version>${otel-agent-ext-java.version}</version>
+		<scope>runtime</scope>
+	</dependency>
+	<dependency>
+		<groupId>com.sap.xdsr</groupId>
+		<artifactId>fesr-to-otel-java</artifactId>
+		<version>${fesr-to-otel-java.version}</version>
+		<scope>runtime</scope>
+	</dependency>
+  
     <dependency>
       <groupId>com.sap.cds</groupId>
       <artifactId>cds-starter-spring-boot-odata</artifactId>

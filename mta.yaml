@@ -10,24 +10,33 @@ build-parameters:
   before-all:
     - builder: custom
       commands:
-        # set 'CDS_ENV=node' to pick the 'node' build profile settings, defined in package.json
-        - npx -p @sap/cds-dk cds build --profile production,node
+        - npx -p @sap/cds-dk cds build --profile production,java
+        - npx -p @sap/cds-dk cds build --profile production,hana
 
 modules:
   # --------------------- SERVER MODULE ------------------------
   - name: sflight-srv
   # ------------------------------------------------------------
-    type: nodejs
-    path: gen/srv
+    type: java
+    path: srv
+    properties:
+      SPRING_PROFILES_ACTIVE: cloud
+      JBP_CONFIG_COMPONENTS: "{jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']}"
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 11.+ }'
+      JBP_CONFIG_JAVA_OPTS: "[java_opts: '-javaagent:BOOT-INF/lib/opentelemetry-javaagent-1.25.1.jar -Dotel.javaagent.enabled=true -Dotel.resource.attributes=account=TeamPerfMon,sap.calm.tenantId=2cc1d327-1641-4949-bfd2-d39324f1549b,otel.poll.service.type=SAP_CP_CF,otel.poll.every.second=60 -Dotel.service.name=sflight -Dotel.propagators=sapuniversal -Dotel.traces.exporter=none -Dotel.metrics.exporter=none -Dotel.javaagent.extensions=BOOT-INF/lib/otel-agent-ext-java-1.5.0.jar -Dio.opentelemetry.javaagent.slf4j.simpleLogger.defaultLogLevel=INFO -Dcom.sap.otel.agentext.defaultLogLevel=INFO']"   
     requires:
       - name: sflight-db
       - name: sflight-uaa
+      - name: sflight-destination-service
     provides:
       - name: srv-api # required by consumers of CAP services (e.g. approuter, destinations)
         properties:
           srv-url: ${default-url}
     build-parameters:
-      builder: npm-ci
+      builder: custom
+      commands:
+        - mvn clean package -DskipTests=true
+      build-result: target/*-exec.jar
       ignore: ["node_modules/"]
 
   # -------------------- SIDECAR MODULE ------------------------
