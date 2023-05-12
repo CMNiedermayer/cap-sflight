@@ -10,13 +10,6 @@
       "csrfProtection": false
     },
     {
-      "source": "^/fesr$",
-      "target": "/fesr",
-      "destination": "sflight-srv",
-      "csrfProtection": false,
-      "authenticationType": "xsuaa"
-    },
-    {
       "source": "^(.*)$",
       "target": "$1",
       "service": "html5-apps-repo-rt",
