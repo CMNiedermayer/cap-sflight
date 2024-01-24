@@ -1,0 +1,35 @@
+<configuration debug="false" scan="false">
+	<!-- log format for CF -->
+	<appender name="STDOUT-JSON" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="com.sap.hcp.cf.logback.encoder.JsonEncoder">
+		</encoder>
+	</appender>
+	
+	<springProperty scope="context" name="LOG_ROOT_LEVEL"
+		source="log.level.root" />
+	<springProperty scope="context" name="LOG_ROOT_APPENDER"
+		source="log.appender.root" />
+	<springProperty scope="context"
+                    name="LOG_OTEL_AGENT_LEVEL" source="log.level.otel.javaagent"/>
+    <springProperty scope="context"
+                    name="LOG_OTEL_AGENTEXT_LEVEL" source="log.level.otel.agentext"/>	
+	
+	<root level="${LOG_ROOT_LEVEL:-WARN}">
+		<appender-ref ref="${LOG_ROOT_APPENDER:-STDOUT-JSON}" />
+	</root>
+	
+	<!-- logs from current application -->
+	<logger name="com.sap.cap.sflight" level="INFO"/>
+	<!-- logs from SAP OTEL Agent extension -->
+    <logger name="com.sap.otel.agentext" level="${LOG_OTEL_AGENTEXT_LEVEL:-DEBUG}"/>
+    <logger name="com.sap.otel.agentext.processor.exm" level="WARN"/>
+    <!-- logs from SAP OTEL Agent itself -->
+    <logger name="io.opentelemetry.javaagent" level="${LOG_OTEL_AGENT_LEVEL:-DEBUG}"/>
+    
+    <!-- CAP OTEL instrumentation -->
+    <logger name="com.sap.cds.otel" level="DEBUG"/>
+    
+    <!-- Cloud Logging Agent extension -->
+    <logger name="com.sap.hcf.cf.logging.opentelemetry.agent.ext" level="DEBUG"/>
+	
+</configuration>

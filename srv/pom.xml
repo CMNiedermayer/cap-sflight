@@ -12,6 +12,10 @@
   <packaging>jar</packaging>
 
   <name>srv</name>
+  
+  <properties>
+	  <fesr-to-otel-java.version>2.0.4</fesr-to-otel-java.version>
+  </properties>
 
   <!-- ACTUAL DEPENDENCIES -->
   <dependencies>
@@ -70,6 +74,13 @@
       <artifactId>cds-feature-k8s</artifactId>
       <scope>runtime</scope>
     </dependency>
+
+	<dependency>
+		<groupId>com.sap.xdsr</groupId>
+		<artifactId>fesr-to-otel-java</artifactId>
+		<version>${fesr-to-otel-java.version}</version>
+		<scope>runtime</scope>
+	</dependency>
   </dependencies>
 
   <build>
