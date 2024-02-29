@@ -5,6 +5,9 @@ description: "CAP sflight demo"
 
 parameters:
   enable-parallel-deployments: true
+  otel-exporter-config: -Dotel.traces.exporter=cloud-logging -Dotel.metrics.exporter=cloud-logging -Dotel.logs.exporter=cloud-logging
+  otel-agent-ext-java-version: 1.5.10
+  otel-agent-version: 2.0.0
 
 build-parameters:
   before-all:
@@ -20,18 +23,20 @@ modules:
     type: java
     path: srv
     parameters:
-      buildpacks:
-       - https://my-java-buildpack.cfapps.eu10.hana.ondemand.com/xs-java-buildpack-1.86.0-offline-unix.zip    
+#      buildpacks:
+#       - https://my-java-buildpack.cfapps.eu10.hana.ondemand.com/xs-java-buildpack-1.86.0-offline-unix.zip    
     properties:
       SPRING_PROFILES_ACTIVE: cloud
       JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
-      JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.+ }'      
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.+ }'
+      # only required when buildpack is NOT used
+      JBP_CONFIG_JAVA_OPTS: "[java_opts: '-javaagent:BOOT-INF/lib/opentelemetry-javaagent-${otel-agent-version}.jar -Dotel.javaagent.extensions=BOOT-INF/lib/otel-agent-ext-java-${otel-agent-ext-java-version}.jar -Dotel.resource.attributes=account=Integration_Tests_Staging_CF,otel.poll.service.type=SAP_CP_CF -Dotel.service.name=sflight-srv -Dotel.propagators=sapuniversal -Dotel.instrumentation.logback-appender.experimental.capture-mdc-attributes=* -Dotel.instrumentation.logback-appender.experimental-log-attributes=true ${otel-exporter-config} -Dotel.javaagent.logging=application -Dcom.sap.otel.agentext.defaultLogLevel=INFO -Dotel.javaagent.enabled=true']"
     requires:
       - name: sflight-db
       - name: sflight-uaa
       - name: sflight-destination-service
       # buildpack     
-      - name: xotel-agent-ext-java
+#      - name: xotel-agent-ext-java
       - name: cls      
     provides:
       - name: srv-api # required by consumers of CAP services (e.g. approuter, destinations)

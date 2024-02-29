@@ -14,7 +14,7 @@
   <name>srv</name>
   
   <properties>
-	  <fesr-to-otel-java.version>2.0.4</fesr-to-otel-java.version>
+	  <fesr-to-otel-java.version>2.0.6</fesr-to-otel-java.version>
   </properties>
 
   <!-- ACTUAL DEPENDENCIES -->
@@ -81,6 +81,32 @@
 		<version>${fesr-to-otel-java.version}</version>
 		<scope>runtime</scope>
 	</dependency>
+	
+	<!-- required to demo manual OTEL instrumentation -->
+	<dependency>
+		<groupId>io.opentelemetry</groupId>
+		<artifactId>opentelemetry-api</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>io.opentelemetry.semconv</groupId>
+		<artifactId>opentelemetry-semconv</artifactId>
+		<version>1.21.0-alpha</version>
+	</dependency>
+	
+	<!-- only required when buildpack is NOT used -->
+	<dependency>
+		<groupId>io.opentelemetry.javaagent</groupId>
+		<artifactId>opentelemetry-javaagent</artifactId>
+		<version>2.0.0</version>
+		<scope>runtime</scope>
+	</dependency>
+	<dependency>
+		<groupId>com.sap.xdsr</groupId>
+		<artifactId>otel-agent-ext-java</artifactId>
+		<version>1.5.10</version>
+		<scope>runtime</scope>
+	</dependency>
+	<!-- only required when buildpack is NOT used -->
   </dependencies>
 
   <build>
