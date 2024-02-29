@@ -37,5 +37,5 @@ spring:
     sql.init.mode: never
 
 cds:
-    datasource:
-        csv.initialization-mode: never
+    datasource.csv.initialization-mode: never
+    security.authentication.mode: never # i.e. No endpoint requires authentication
